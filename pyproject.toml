@@ -13,8 +13,9 @@ dependencies = [
 
 [tool.setuptools]
 packages = ["systemmonitor"]
-entry-points = {
-    "console_scripts": [
-        "system-monitor=systemmonitor.monitor:display_gpu_memory_usage"
-    ]
-}
+
+[project.entry-points.console_scripts]
+system-monitor = "systemmonitor.main:main"
+
+[tool.setuptools.package-data]
+systemmonitor = ["styles.css"]
