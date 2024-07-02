@@ -1,4 +1,3 @@
-import asyncio
 import datetime
 from pathlib import Path
 import psutil
@@ -6,12 +5,11 @@ import subprocess
 from textual_plotext import PlotextPlot
 from textual.app import App, ComposeResult
 from textual.widgets import Header, Footer, Static
-from textual.containers import Container, Horizontal
+from textual.containers import Container
 from textual.reactive import reactive
-from rich.console import Console
 from rich.panel import Panel
 from rich.progress import BarColumn, Progress, TextColumn
-from rich.text import Text
+
 
 class GPUStats:
     def __init__(self):
@@ -22,12 +20,16 @@ class GPUStats:
     async def update(self):
         try:
             result = subprocess.run(
-                ["nvidia-smi", "--query-gpu=temperature.gpu,utilization.gpu,utilization.memory", "--format=csv,noheader,nounits"],
+                [
+                    "nvidia-smi",
+                    "--query-gpu=temperature.gpu,utilization.gpu,utilization.memory",
+                    "--format=csv,noheader,nounits",
+                ],
                 capture_output=True,
                 text=True,
-                check=True
+                check=True,
             )
-            temp, perc_gpu, perc_mem = map(int, result.stdout.strip().split(','))
+            temp, perc_gpu, perc_mem = map(int, result.stdout.strip().split(","))
             self.temp = temp
             self.gpu = perc_gpu
             self.gpu_vram = perc_mem
@@ -38,8 +40,10 @@ class GPUStats:
             # header
             pass
 
+
 class UsageGraph(PlotextPlot):
     """A widget for plotting usage data."""
+
     # marker = var("dot")
 
     def __init__(
@@ -84,9 +88,10 @@ class UsageGraph(PlotextPlot):
         """React to the marker being changed."""
         self.replot()
 
+
 class SystemMonitor(App):
     BINDINGS = [("q", "quit", "Quit")]
-    CSS_PATH = Path(__file__).parent / 'styles.css'
+    CSS_PATH = Path(__file__).parent / "styles.css"
 
     cpu_usage = reactive(0.0)
     ram_usage = reactive(0.0)
@@ -131,13 +136,15 @@ class SystemMonitor(App):
         self.query_one("#cpu_bar").update(self.create_bar("CPU", self.cpu_usage))
         self.query_one("#ram_bar").update(self.create_bar("RAM", self.ram_usage))
         self.query_one("#gpu_bar").update(self.create_bar("GPU", self.gpu_usage))
-        self.query_one("#gpu_memory_bar").update(self.create_bar("GPU Memory", self.gpu_memory))
-    
+        self.query_one("#gpu_memory_bar").update(
+            self.create_bar("GPU Memory", self.gpu_memory)
+        )
+
     def create_bar(self, label: str, value: float) -> Panel:
         progress = Progress(
             TextColumn("[bold blue]{task.description}"),
             BarColumn(bar_width=50),
-            TextColumn("[bold]{task.percentage:.0f}%")
+            TextColumn("[bold]{task.percentage:.0f}%"),
         )
         progress.add_task(label, total=100, completed=value)
         return Panel(progress, title=f"{label} Usage", border_style="bright_blue")
@@ -146,6 +153,7 @@ class SystemMonitor(App):
         # This is a placeholder. In a real implementation, you'd update the graphs here.
         # You might use a library like plotext or create custom widgets with Textual
         pass
+
 
 def main():
     app = SystemMonitor()
