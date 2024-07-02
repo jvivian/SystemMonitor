@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "systemmonitor"
+version = "0.1.0"
+description = "A CLI tool to monitor GPU memory usage."
+authors = [{ name = "John Vivian" }]
+dependencies = [
+    "rich"
+]
+
+[tool.setuptools]
+packages = ["systemmonitor"]
+entry-points = {
+    "console_scripts": [
+        "system-monitor=systemmonitor.monitor:display_gpu_memory_usage"
+    ]
+}
