@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+from pathlib import Path
 import psutil
 import subprocess
 from textual_plotext import PlotextPlot
@@ -85,7 +86,7 @@ class UsageGraph(PlotextPlot):
 
 class SystemMonitor(App):
     BINDINGS = [("q", "quit", "Quit")]
-    CSS_PATH = "systemmonitor.css"
+    CSS_PATH = Path(__file__).parent / 'styles.css'
 
     cpu_usage = reactive(0.0)
     ram_usage = reactive(0.0)
@@ -146,6 +147,10 @@ class SystemMonitor(App):
         # You might use a library like plotext or create custom widgets with Textual
         pass
 
-if __name__ == "__main__":
+def main():
     app = SystemMonitor()
     app.run()
+
+
+if __name__ == "__main__":
+    main()
