@@ -8,5 +8,6 @@
 git clone https://github.com/jvivian/SystemMonitor && cd SystemMonitor
 conda env update -f environment.yml
 conda activate system-monitor
+pip install ./
 system-monitor
 ```
